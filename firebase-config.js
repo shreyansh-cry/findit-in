@@ -271,3 +271,37 @@ export async function getUserProfile() {
     return null;
   }
 }
+// ================================
+// FIRESTORE — SAVE JOB RESULTS
+// ================================
+export async function saveJobResults(uid, jobs) {
+  try {
+    const jobsRef = doc(db, 'jobs', uid);
+    await setDoc(jobsRef, {
+      listings: jobs,
+      updatedAt: serverTimestamp()
+    });
+    console.log('✅ Jobs saved to Firestore successfully');
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Error saving jobs:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// ================================
+// FIRESTORE — GET JOB RESULTS
+// ================================
+export async function getJobResults(uid) {
+  try {
+    const jobsRef = doc(db, 'jobs', uid);
+    const snapshot = await getDoc(jobsRef);
+    if (snapshot.exists()) {
+      return snapshot.data().listings || [];
+    }
+    return [];
+  } catch (error) {
+    console.error('❌ Error fetching jobs:', error);
+    return [];
+  }
+}
