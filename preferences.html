@@ -17,7 +17,6 @@
         <div class="logo-icon">F</div>
         Findit
       </a>
-
       <div class="navbar-actions">
         <span style="font-size: 14px; color: var(--text-secondary);">Step 2 of 3</span>
       </div>
@@ -40,7 +39,6 @@
           <div class="progress-dot inactive">3</div>
         </div>
       </div>
-
       <h1>Complete Your Profile</h1>
       <p>Tell us about yourself so we can find the best opportunities for you.</p>
     </div>
@@ -54,7 +52,6 @@
       <div class="form-section">
         <h3 class="form-section-title"><span class="icon">👤</span> Personal Information</h3>
         <p class="form-section-desc">Basic details to set up your profile.</p>
-
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="fullName">Full Name *</label>
@@ -65,7 +62,6 @@
             <input class="form-input" type="email" id="email" placeholder="you@example.com" required>
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="college">College / University</label>
@@ -86,7 +82,6 @@
             </select>
           </div>
         </div>
-
         <div class="form-group">
           <label class="form-label" for="location">Location</label>
           <input class="form-input" type="text" id="location" placeholder="e.g. Mumbai, India">
@@ -99,7 +94,6 @@
       <div class="form-section">
         <h3 class="form-section-title"><span class="icon">🎯</span> Job Preferences</h3>
         <p class="form-section-desc">Help us understand what kind of work excites you.</p>
-
         <div class="form-group">
           <label class="form-label" for="jobStream">Preferred Job Stream *</label>
           <select class="form-select" id="jobStream" required>
@@ -118,7 +112,6 @@
             <option value="other">✨ Other</option>
           </select>
         </div>
-
         <div class="form-group">
           <label class="form-label">Skills *</label>
           <div class="tags-input" id="skillsInput">
@@ -126,12 +119,10 @@
           </div>
           <p class="form-helper">Press Enter or comma to add a skill. Click × to remove.</p>
         </div>
-
         <div class="form-group">
           <label class="form-label" for="qualification">Qualification / Experience</label>
           <textarea class="form-textarea" id="qualification" placeholder="Briefly describe your qualifications, certifications, or relevant experience..." rows="3"></textarea>
         </div>
-
         <div class="form-group">
           <label class="form-label">Preferred Work Type</label>
           <div class="radio-group">
@@ -153,7 +144,6 @@
             </div>
           </div>
         </div>
-
         <div class="form-group">
           <label class="form-label" for="stipend">Expected Pay / Stipend Range</label>
           <select class="form-select" id="stipend">
@@ -175,7 +165,6 @@
       <div class="form-section">
         <h3 class="form-section-title"><span class="icon">🔗</span> Links & Resume</h3>
         <p class="form-section-desc">Share your portfolio and upload your resume so we can match you better.</p>
-
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="portfolioLink">Portfolio Link</label>
@@ -186,7 +175,6 @@
             <input class="form-input" type="url" id="linkedinLink" placeholder="https://linkedin.com/in/yourprofile">
           </div>
         </div>
-
         <div class="form-group">
           <label class="form-label">Resume / CV</label>
           <div class="upload-zone" id="uploadZone">
@@ -225,16 +213,16 @@
 
   <script src="script.js"></script>
   <script type="module">
-    import { updateNavbarAuth, getCurrentUser, isLoggedIn, saveUserProfile, getUserProfile } from './firebase-config.js';
+    import { updateNavbarAuth, getCurrentUser, isLoggedIn, saveUserProfile, getUserProfile, saveJobResults } from './firebase-config.js';
 
-    // Auth guard — redirect to sign-in if not logged in
+    // Auth guard
     if (!isLoggedIn()) {
       window.location.href = 'signin.html';
     }
 
     updateNavbarAuth();
 
-    // Pre-fill form fields from Google user data
+    // Pre-fill from Google user data
     const user = getCurrentUser();
     if (user) {
       const nameField = document.getElementById('fullName');
@@ -248,17 +236,15 @@
       }
     }
 
-    // ---- Pre-fill from Firestore if user already has saved data ----
+    // Pre-fill from Firestore if user already has saved data
     async function prefillFromFirestore() {
       try {
         const profile = await getUserProfile();
         if (!profile) return;
-
         const setVal = (id, val) => {
           const el = document.getElementById(id);
           if (el && val) el.value = val;
         };
-
         setVal('fullName', profile.fullName);
         setVal('college', profile.college);
         setVal('yearOfStudy', profile.yearOfStudy);
@@ -268,14 +254,10 @@
         setVal('stipend', profile.expectedPay);
         setVal('portfolioLink', profile.portfolioLink);
         setVal('linkedinLink', profile.linkedinProfile);
-
-        // Pre-fill work type radio
         if (profile.preferredWorkType) {
           const radio = document.querySelector(`input[name="workType"][value="${profile.preferredWorkType}"]`);
           if (radio) radio.checked = true;
         }
-
-        // Pre-fill skills tags
         if (profile.skills && profile.skills.length > 0) {
           const container = document.getElementById('skillsInput');
           const input = document.getElementById('skillTagInput');
@@ -285,9 +267,7 @@
               tag.className = 'tag';
               tag.innerHTML = `${skill} <button type="button" class="remove-tag" data-skill="${skill.toLowerCase()}">✕</button>`;
               container.insertBefore(tag, input);
-              tag.querySelector('.remove-tag').addEventListener('click', function() {
-                tag.remove();
-              });
+              tag.querySelector('.remove-tag').addEventListener('click', function() { tag.remove(); });
             });
           }
         }
@@ -298,16 +278,11 @@
 
     prefillFromFirestore();
 
-    // Collect all skills from the tag input
     function getSkillTags() {
       const tags = document.querySelectorAll('#skillsInput .tag');
-      return Array.from(tags).map(tag => {
-        // Get only the text content, excluding the remove button
-        return tag.childNodes[0].textContent.trim();
-      });
+      return Array.from(tags).map(tag => tag.childNodes[0].textContent.trim());
     }
 
-    // Get the uploaded file name (if any)
     function getUploadedFileName() {
       const fileInfo = document.getElementById('uploadFileInfo');
       if (fileInfo && fileInfo.classList.contains('active')) {
@@ -316,35 +291,38 @@
       return null;
     }
 
-    // Show toast notification
     function showToast(message, type = 'error') {
-      // Remove existing toast
       const existing = document.querySelector('.auth-toast');
       if (existing) existing.remove();
-
       const toast = document.createElement('div');
       toast.className = `auth-toast ${type}`;
-      toast.innerHTML = `
-        <span>${type === 'error' ? '⚠️' : '✅'}</span>
-        <span>${message}</span>
-      `;
+      toast.innerHTML = `<span>${type === 'error' ? '⚠️' : '✅'}</span><span>${message}</span>`;
       document.body.appendChild(toast);
-
-      requestAnimationFrame(() => {
-        toast.classList.add('visible');
-      });
-
+      requestAnimationFrame(() => { toast.classList.add('visible'); });
       setTimeout(() => {
         toast.classList.remove('visible');
         setTimeout(() => toast.remove(), 400);
       }, 4000);
     }
 
-    // Override the form handler — save to Firestore + localStorage
+    // Platforms to cycle through in scanning animation
+    const platforms = ['LinkedIn', 'Reddit', 'Twitter/X', 'Internshala', 'Naukri', 'Google', 'Upwork', 'Discord'];
+
+    function startScanningAnimation(btn) {
+      let i = 0;
+      return setInterval(() => {
+        btn.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          Scanning ${platforms[i % platforms.length]}...
+        `;
+        i++;
+      }, 1200);
+    }
+
+    // Main form handler
     window.handlePreferences = async function(e) {
       e.preventDefault();
 
-      // Gather all form data
       const formData = {
         fullName: document.getElementById('fullName')?.value || '',
         email: document.getElementById('email')?.value || '',
@@ -362,42 +340,64 @@
         submittedAt: new Date().toISOString()
       };
 
-      // Save to localStorage (for offline/local reference)
       localStorage.setItem('findit_preferences', JSON.stringify(formData));
 
-      // Show loading state
       const btn = e.target.querySelector('.form-submit');
       const originalHTML = btn.innerHTML;
-      btn.innerHTML = `
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-        Saving to Firestore...
-      `;
       btn.style.opacity = '0.7';
       btn.disabled = true;
 
-      // Save to Firestore
+      // Step 1 — Save profile to Firestore
+      btn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        Saving your profile...
+      `;
+
       const result = await saveUserProfile(formData);
 
-      if (result.success) {
-        showToast('Profile saved to Firestore successfully!', 'success');
-        console.log('✅ Preferences saved to Firestore and localStorage');
-
-
-        btn.innerHTML = `
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          Saved! Redirecting...
-        `;
-        btn.style.opacity = '1';
-
-        setTimeout(() => {
-          window.location.href = 'results.html';
-        }, 1500);
-      } else {
-        // Show error, restore button
+      if (!result.success) {
         showToast(result.error || 'Failed to save. Please try again.', 'error');
         btn.innerHTML = originalHTML;
         btn.style.opacity = '1';
         btn.disabled = false;
+        return false;
+      }
+
+      showToast('Profile saved! Now scanning job platforms...', 'success');
+
+      // Step 2 — Call AI backend
+      const scanInterval = startScanningAnimation(btn);
+
+      try {
+        const response = await fetch('/api/find-jobs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...formData, uid: user?.uid })
+        });
+
+        const data = await response.json();
+        clearInterval(scanInterval);
+
+        if (data.success && data.jobs) {
+          // Step 3 — Save jobs to Firestore
+          await saveJobResults(user?.uid, data.jobs);
+          console.log('✅ Jobs saved to Firestore:', data.jobs.length);
+
+          btn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Found ${data.jobs.length} matches! Redirecting...
+          `;
+          btn.style.opacity = '1';
+
+          setTimeout(() => { window.location.href = 'results.html'; }, 1500);
+        } else {
+          throw new Error(data.error || 'No jobs returned');
+        }
+      } catch (err) {
+        clearInterval(scanInterval);
+        console.error('❌ AI job fetch failed:', err);
+        showToast('Job search failed, but your profile is saved. Taking you to results...', 'error');
+        setTimeout(() => { window.location.href = 'results.html'; }, 2000);
       }
 
       return false;
