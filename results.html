@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your personalized job matches — Browse internships and freelance opportunities matched to your skills on Findit.">
+  <title>Your Matches — Findit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='20' width='100' height='100' fill='%234F46E5'/><text x='50' y='68' text-anchor='middle' fill='white' font-size='55' font-weight='bold' font-family='sans-serif'>F</text></svg>">
+</head>
+<body class="results-page dashboard-page">
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">
+        <div class="logo-icon">F</div>
+        Findit
+      </a>
+
+      <div class="navbar-links">
+        <a href="index.html">Home</a>
+        <a href="preferences.html">Preferences</a>
+        <a href="results.html" class="active">My Matches</a>
+      </div>
+
+      <div class="navbar-actions">
+        <a href="signin.html" class="btn-signin" style="color: var(--text-secondary);">Sign In</a>
+        <a href="signin.html#signup" class="btn-get-started" style="background: var(--gradient); color: #fff; font-size: 14px; font-weight: 600; padding: 10px 24px; border-radius: var(--radius-sm);">Get Started</a>
+      </div>
+
+      <button class="navbar-toggle" id="navToggle" aria-label="Toggle mobile menu">
+        <span style="background: var(--text);"></span>
+        <span style="background: var(--text);"></span>
+        <span style="background: var(--text);"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav-overlay" id="mobileOverlay"></div>
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose">✕</button>
+    <a href="index.html">Home</a>
+    <a href="preferences.html">Preferences</a>
+    <a href="results.html">My Matches</a>
+  </div>
+
+  <!-- ===== DASHBOARD ===== -->
+  <div class="dashboard">
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <div class="container">
+        <div class="dashboard-header-inner">
+          <div class="dashboard-header-left">
+            <h1 id="resultsHeading">Your Job Matches</h1>
+            <p class="dashboard-subtitle" id="resultsSubtitle">Personalized opportunities matched to your profile and preferences.</p>
+          </div>
+          <div class="dashboard-header-right">
+            <div class="dashboard-search">
+              <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input type="text" class="search-input" id="jobSearch" placeholder="Search jobs, companies, skills...">
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats bar -->
+        <div class="dashboard-stats" id="dashboardStats">
+          <div class="dash-stat">
+            <span class="dash-stat-number" id="totalJobsCount">0</span>
+            <span class="dash-stat-label">Matches Found</span>
+          </div>
+          <div class="dash-stat">
+            <span class="dash-stat-number" id="excellentMatchCount">0</span>
+            <span class="dash-stat-label">Excellent (8+)</span>
+          </div>
+          <div class="dash-stat">
+            <span class="dash-stat-number" id="platformsCount">0</span>
+            <span class="dash-stat-label">Companies</span>
+          </div>
+          <div class="dash-stat">
+            <span class="dash-stat-number" id="newTodayCount">0</span>
+            <span class="dash-stat-label">Remote Jobs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Body -->
+    <div class="container">
+      <div class="dashboard-body">
+
+        <!-- Filters Sidebar -->
+        <aside class="filters-sidebar" id="filtersSidebar">
+          <div class="filters-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Filters
+            </h3>
+            <button class="filters-clear" id="clearFilters">Clear All</button>
+          </div>
+
+          <!-- Match Score Filter -->
+          <div class="filter-group">
+            <button class="filter-group-toggle active" data-target="filterMatch">
+              Match Score
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="filter-group-body active" id="filterMatch">
+              <select class="filter-select" id="filterMatchSelect">
+                <option value="all">All Scores</option>
+                <option value="9">9+ Excellent</option>
+                <option value="8">8+ Great</option>
+                <option value="7">7+ Good</option>
+                <option value="6">6+ Fair</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Location Filter -->
+          <div class="filter-group">
+            <button class="filter-group-toggle active" data-target="filterLocation">
+              Location
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="filter-group-body active" id="filterLocation">
+              <select class="filter-select" id="filterLocationSelect">
+                <option value="all">All Locations</option>
+                <option value="remote">🏠 Remote</option>
+                <option value="onsite">🏢 On-site</option>
+                <option value="hybrid">🔄 Hybrid</option>
+              </select>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Mobile filters overlay -->
+        <div class="mobile-filters-overlay" id="mobileFiltersOverlay"></div>
+
+        <!-- Mobile filter toggle -->
+        <button class="mobile-filter-toggle" id="mobileFilterToggle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Filters
+          <span class="filter-count" id="activeFilterCount" style="display:none;">0</span>
+        </button>
+
+        <!-- Jobs Content -->
+        <main class="jobs-content">
+
+          <!-- Sort bar -->
+          <div class="jobs-toolbar" id="jobsToolbar" style="display: none;">
+            <div class="jobs-toolbar-left">
+              <span class="jobs-showing" id="jobsShowing">Showing 0 matches</span>
+              <div class="active-filters" id="activeFilters"></div>
+            </div>
+            <div class="jobs-toolbar-right">
+              <label class="sort-label" for="sortSelect">Sort by:</label>
+              <select class="sort-select" id="sortSelect">
+                <option value="match-desc">Best Match</option>
+                <option value="title-asc">Title A-Z</option>
+                <option value="title-desc">Title Z-A</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          <div class="results-loading" id="resultsLoading">
+            <div class="results-loading-spinner">
+              <div class="results-loading-icon">🔍</div>
+            </div>
+            <h3>Finding the best opportunities for you...</h3>
+            <p>Our AI is searching and filtering thousands of jobs to find your perfect matches.</p>
+            <div class="results-loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <!-- Job Cards Grid -->
+          <div class="jobs-grid" id="jobsGrid" style="display: none;">
+            <!-- Job cards rendered by JavaScript -->
+          </div>
+
+          <!-- Empty state -->
+          <div class="jobs-empty" id="jobsEmpty" style="display: none;">
+            <div class="jobs-empty-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </div>
+            <h3>No matches found</h3>
+            <p>Try adjusting your filters or broadening your search to see more opportunities.</p>
+            <button class="btn btn-primary btn-sm" onclick="document.getElementById('clearFilters').click()">Clear All Filters</button>
+          </div>
+
+          <!-- Error state -->
+          <div class="results-error" id="resultsError" style="display: none;">
+            <div class="results-error-icon">⚠️</div>
+            <h3>Something went wrong</h3>
+            <p id="errorMessage">We couldn't fetch your job matches right now. Showing sample results instead.</p>
+            <button class="btn btn-primary btn-sm" id="retryBtn">Try Again</button>
+          </div>
+
+          <!-- Data source notice -->
+          <div class="live-notice" id="liveNotice" style="display: none;">
+            <div class="live-notice-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <p><strong>AI-Powered Results:</strong> These jobs were found and ranked by our AI based on your preferences, skills, and experience.</p>
+          </div>
+
+          <!-- Fallback sample data notice -->
+          <div class="sample-notice" id="sampleNotice" style="display: none;">
+            <div class="sample-notice-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            </div>
+            <p><strong>Sample Data:</strong> These are placeholder job listings to preview the dashboard. Connect the backend to see real AI-matched opportunities.</p>
+          </div>
+
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script type="module">
+    import { updateNavbarAuth, getCurrentUser, isLoggedIn, getUserProfile } from './firebase-config.js';
+
+    if (!isLoggedIn()) {
+      window.location.href = 'signin.html';
+    }
+
+    updateNavbarAuth();
+
+    // Personalize heading
+    const user = getCurrentUser();
+    if (user && user.displayName) {
+      const firstName = user.displayName.split(' ')[0];
+      document.getElementById('resultsHeading').textContent = `Hey ${firstName}, here are your matches`;
+    }
+
+    // ================================
+    // AI BACKEND INTEGRATION
+    // ================================
+
+    // ⬇️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW ⬇️
+    const FINDIT_BACKEND_URL = "PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+    /**
+     * Get user preferences from localStorage and/or Firebase
+     * Returns a merged object with the best available data
+     */
+    async function getUserPreferences() {
+      // 1. Start with localStorage (always available, fast)
+      let prefs = {};
+      try {
+        const stored = localStorage.getItem('findit_preferences');
+        if (stored) {
+          prefs = JSON.parse(stored);
+        }
+      } catch (e) {
+        console.warn('Could not read localStorage preferences:', e);
+      }
+
+      // 2. Try to get fresh data from Firestore (may have more complete data)
+      try {
+        const firestoreProfile = await getUserProfile();
+        if (firestoreProfile) {
+          // Merge Firestore data — Firestore takes priority for fields it has
+          prefs = {
+            ...prefs,
+            fullName: firestoreProfile.fullName || prefs.fullName || '',
+            email: firestoreProfile.email || prefs.email || '',
+            jobStream: firestoreProfile.preferredJobStream || prefs.jobStream || '',
+            skills: firestoreProfile.skills || prefs.skills || [],
+            qualification: firestoreProfile.qualificationExperience || prefs.qualification || '',
+            workType: firestoreProfile.preferredWorkType || prefs.workType || '',
+            location: firestoreProfile.location || prefs.location || '',
+            stipend: firestoreProfile.expectedPay || prefs.stipend || ''
+          };
+        }
+      } catch (e) {
+        console.warn('Could not read Firestore profile, using localStorage:', e);
+      }
+
+      // 3. Also fill name from the auth user if missing
+      const currentUser = getCurrentUser();
+      if (currentUser && !prefs.fullName) {
+        prefs.fullName = currentUser.displayName || '';
+      }
+      if (currentUser && !prefs.email) {
+        prefs.email = currentUser.email || '';
+      }
+
+      return prefs;
+    }
+
+    /**
+     * Build the request payload matching what the backend expects
+     */
+    function buildBackendPayload(prefs) {
+      // Convert skills array to comma-separated string
+      const skillsStr = Array.isArray(prefs.skills) ? prefs.skills.join(', ') : (prefs.skills || '');
+
+      // Map jobStream slug to human-readable category
+      const categoryMap = {
+        'video-editing': 'Video Editing',
+        'social-media': 'Social Media Management',
+        'stock-markets': 'Stock Markets & Finance',
+        'tutoring': 'Tutoring & Teaching',
+        'content-creation': 'Content Creation & Writing',
+        'thumbnail-design': 'Thumbnail & Graphic Design',
+        'web-development': 'Web Development',
+        'ui-ux-design': 'UI/UX Design',
+        'graphic-design': 'Graphic Design',
+        'digital-marketing': 'Digital Marketing',
+        'data-analytics': 'Data Analytics',
+        'other': 'General'
+      };
+
+      return {
+        name: prefs.fullName || 'User',
+        category: categoryMap[prefs.jobStream] || prefs.jobStream || 'General',
+        skills: skillsStr,
+        experience: prefs.qualification || 'Fresher',
+        jobType: prefs.workType || 'any',
+        location: prefs.location || 'Remote'
+      };
+    }
+
+    /**
+     * Fetch jobs from the AI backend
+     */
+    async function fetchAIJobs(payload) {
+      const response = await fetch(FINDIT_BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        // Google Apps Script redirects, so we need to follow
+        redirect: 'follow'
+      });
+
+      if (!response.ok) {
+        throw new Error(`Backend returned status ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (!data || !data.jobs || !Array.isArray(data.jobs)) {
+        throw new Error('Invalid response format from backend');
+      }
+
+      return data.jobs;
+    }
+
+    /**
+     * Convert fallback SAMPLE_JOBS to the AI response format
+     * so the same card renderer works for both
+     */
+    function convertSampleJobsToAIFormat(sampleJobs) {
+      return sampleJobs.map(job => ({
+        title: job.jobTitle || 'Untitled Position',
+        company: job.source || job.platformSource || 'Unknown',
+        location: job.platformSource === 'Remote' ? 'Remote' : (job.platformSource || 'Not specified'),
+        description: job.snippet || 'No description available.',
+        whyMatch: 'This is a sample job listing — connect the AI backend to see personalized match reasons.',
+        skills: job.experienceRequired || 'Not specified',
+        applyLink: job.link || '#',
+        matchScore: (job.matchScore ? (job.matchScore / 10).toFixed(1) + '/10' : '7/10')
+      }));
+    }
+
+    // ================================
+    // MAIN INITIALIZATION
+    // ================================
+    (async function initResults() {
+      const loadingEl = document.getElementById('resultsLoading');
+      const gridEl = document.getElementById('jobsGrid');
+      const toolbarEl = document.getElementById('jobsToolbar');
+      const emptyEl = document.getElementById('jobsEmpty');
+      const errorEl = document.getElementById('resultsError');
+      const liveNotice = document.getElementById('liveNotice');
+      const sampleNotice = document.getElementById('sampleNotice');
+
+      let allJobs = [];
+      let isLiveData = false;
+
+      // Check if backend URL is configured
+      const isBackendConfigured = FINDIT_BACKEND_URL && FINDIT_BACKEND_URL !== "PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+      if (isBackendConfigured) {
+        try {
+          // Show loading
+          loadingEl.style.display = 'flex';
+          gridEl.style.display = 'none';
+          toolbarEl.style.display = 'none';
+
+          // Get user preferences
+          const prefs = await getUserPreferences();
+          const payload = buildBackendPayload(prefs);
+
+          console.log('📤 Sending preferences to AI backend:', payload);
+
+          // Fetch from backend
+          allJobs = await fetchAIJobs(payload);
+          isLiveData = true;
+
+          console.log(`✅ Received ${allJobs.length} AI-matched jobs`);
+
+        } catch (err) {
+          console.error('❌ Backend fetch failed:', err.message);
+
+          // Fall back to sample data
+          if (typeof SAMPLE_JOBS !== 'undefined' && SAMPLE_JOBS.length > 0) {
+            allJobs = convertSampleJobsToAIFormat(SAMPLE_JOBS);
+            console.log('⚠️ Using fallback sample data');
+          } else {
+            // Both backend and fallback failed
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'flex';
+            document.getElementById('errorMessage').textContent =
+              'We couldn\'t fetch your job matches and no fallback data is available. Please try again later.';
+            return;
+          }
+        }
+      } else {
+        // Backend not configured — use sample data
+        console.log('ℹ️ Backend URL not configured, using sample data');
+        if (typeof SAMPLE_JOBS !== 'undefined' && SAMPLE_JOBS.length > 0) {
+          allJobs = convertSampleJobsToAIFormat(SAMPLE_JOBS);
+        }
+      }
+
+      // Hide loading
+      loadingEl.style.display = 'none';
+
+      if (allJobs.length === 0) {
+        emptyEl.style.display = 'flex';
+        toolbarEl.style.display = 'none';
+        return;
+      }
+
+      // Show appropriate notice
+      if (isLiveData) {
+        liveNotice.style.display = 'flex';
+        sampleNotice.style.display = 'none';
+      } else {
+        liveNotice.style.display = 'none';
+        sampleNotice.style.display = 'flex';
+      }
+
+      // Initialize the dashboard engine with fetched jobs
+      window.__finditJobs = allJobs;
+      window.__finditIsLive = isLiveData;
+      initDashboardEngine(allJobs, isLiveData);
+    })();
+
+    // Retry button handler
+    document.getElementById('retryBtn')?.addEventListener('click', () => {
+      window.location.reload();
+    });
+  </script>
+
+  <script>
+    // ================================
+    // JOBS DASHBOARD ENGINE
+    // (Works with both AI backend and fallback data)
+    // ================================
+    function initDashboardEngine(jobs, isLiveData) {
+      let currentFilters = {
+        matchScore: 'all',
+        location: 'all',
+        search: ''
+      };
+
+      let currentSort = 'match-desc';
+
+      // ---- Parse match score from "8.5/10" format ----
+      function parseMatchScore(scoreStr) {
+        if (!scoreStr) return 0;
+        const str = scoreStr.toString();
+        // Handle "8.5/10" format
+        const slashMatch = str.match(/([\d.]+)\s*\/\s*10/);
+        if (slashMatch) return parseFloat(slashMatch[1]);
+        // Handle plain number
+        const num = parseFloat(str);
+        if (!isNaN(num)) return num > 10 ? num / 10 : num;
+        return 0;
+      }
+
+      // ---- Get score class ----
+      function getScoreClass(score) {
+        if (score >= 9) return 'excellent';
+        if (score >= 8) return 'great';
+        if (score >= 7) return 'good';
+        return 'fair';
+      }
+
+      // ---- Get score label ----
+      function getScoreLabel(score) {
+        if (score >= 9) return 'Excellent match';
+        if (score >= 8) return 'Great match';
+        if (score >= 7) return 'Good match';
+        return 'Fair match';
+      }
+
+      // ---- Filter Logic ----
+      function filterJobs(jobs) {
+        return jobs.filter(job => {
+          // Match score filter
+          if (currentFilters.matchScore !== 'all') {
+            const minScore = parseFloat(currentFilters.matchScore);
+            const jobScore = parseMatchScore(job.matchScore);
+            if (jobScore < minScore) return false;
+          }
+
+          // Location filter
+          if (currentFilters.location !== 'all') {
+            const loc = (job.location || '').toLowerCase();
+            const filter = currentFilters.location.toLowerCase();
+            if (filter === 'remote' && !loc.includes('remote')) return false;
+            if (filter === 'onsite' && (loc.includes('remote') || loc.includes('hybrid'))) return false;
+            if (filter === 'hybrid' && !loc.includes('hybrid')) return false;
+          }
+
+          // Search
+          if (currentFilters.search) {
+            const q = currentFilters.search.toLowerCase();
+            const searchable = [
+              job.title || '',
+              job.company || '',
+              job.location || '',
+              job.description || '',
+              job.skills || '',
+              job.whyMatch || ''
+            ].join(' ').toLowerCase();
+            if (!searchable.includes(q)) return false;
+          }
+
+          return true;
+        });
+      }
+
+      // ---- Sort Logic ----
+      function sortJobs(jobs) {
+        const sorted = [...jobs];
+        switch (currentSort) {
+          case 'match-desc':
+            sorted.sort((a, b) => parseMatchScore(b.matchScore) - parseMatchScore(a.matchScore));
+            break;
+          case 'title-asc':
+            sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+            break;
+          case 'title-desc':
+            sorted.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+            break;
+        }
+        return sorted;
+      }
+
+      // ---- Render AI Job Card ----
+      function renderJobCard(job, index) {
+        const score = parseMatchScore(job.matchScore);
+        const scoreClass = getScoreClass(score);
+        const scoreLabel = getScoreLabel(score);
+        const titleInitial = (job.title || 'J').charAt(0).toUpperCase();
+        const scorePercent = Math.min(score * 10, 100);
+
+        // Parse skills into tags
+        const skillsArr = (job.skills || '').split(',').map(s => s.trim()).filter(Boolean);
+        const skillTags = skillsArr.slice(0, 6).map(s =>
+          `<span class="job-skill-tag">${s}</span>`
+        ).join('');
+
+        return `
+          <article class="job-card" data-index="${index}">
+
+            <div class="job-card-header">
+              <div class="job-card-header-left">
+                <div class="job-company-icon">${titleInitial}</div>
+                <div>
+                  <h3 class="job-title">${job.title || 'Untitled Position'}</h3>
+                  <p class="job-company">${job.company || 'Unknown company'}</p>
+                </div>
+              </div>
+              <div class="job-match-badge ${scoreClass}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                ${job.matchScore || 'N/A'}
+              </div>
+            </div>
+
+            <div class="job-meta-row">
+              <span class="job-meta-chip stream">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                ${job.location || 'Not specified'}
+              </span>
+            </div>
+
+            <p class="job-description">${job.description || 'No description available.'}</p>
+
+            ${job.whyMatch ? `
+              <div class="job-why-match">
+                <div class="job-why-match-icon">✨</div>
+                <p>${job.whyMatch}</p>
+              </div>
+            ` : ''}
+
+            ${skillTags ? `
+              <div class="job-skills-row">
+                ${skillTags}
+              </div>
+            ` : ''}
+
+            <div class="job-match-bar">
+              <div class="job-match-bar-track">
+                <div class="job-match-bar-fill ${scoreClass}" style="width: ${scorePercent}%;"></div>
+              </div>
+              <span class="job-match-bar-label">${scoreLabel}</span>
+            </div>
+
+            <div class="job-card-divider"></div>
+
+            <div class="job-card-actions">
+              <a href="${job.applyLink || '#'}" target="_blank" rel="noopener" class="btn btn-primary btn-sm job-apply-btn">
+                Apply Now
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+              <button class="btn btn-secondary btn-sm job-save-btn" onclick="this.classList.toggle('saved'); this.innerHTML = this.classList.contains('saved') ? '❤️ Saved' : '🤍 Save';">
+                🤍 Save
+              </button>
+            </div>
+          </article>
+        `;
+      }
+
+      // ---- Render All ----
+      function applyFilters() {
+        const filtered = filterJobs(jobs);
+        const sorted = sortJobs(filtered);
+
+        const grid = document.getElementById('jobsGrid');
+        const empty = document.getElementById('jobsEmpty');
+        const showing = document.getElementById('jobsShowing');
+        const toolbar = document.getElementById('jobsToolbar');
+
+        if (sorted.length === 0) {
+          grid.style.display = 'none';
+          empty.style.display = 'flex';
+          toolbar.style.display = 'none';
+          showing.textContent = 'No matches found';
+        } else {
+          grid.style.display = '';
+          empty.style.display = 'none';
+          toolbar.style.display = '';
+          grid.innerHTML = sorted.map((job, i) => renderJobCard(job, i)).join('');
+          showing.textContent = `Showing ${sorted.length} match${sorted.length !== 1 ? 'es' : ''}`;
+        }
+
+        updateStats(sorted);
+        updateActiveFilterTags();
+        updateActiveFilterCount();
+      }
+
+      // ---- Stats ----
+      function updateStats(jobsList) {
+        document.getElementById('totalJobsCount').textContent = jobsList.length;
+        document.getElementById('excellentMatchCount').textContent =
+          jobsList.filter(j => parseMatchScore(j.matchScore) >= 8).length;
+        // Count unique companies
+        const companies = new Set(jobsList.map(j => j.company).filter(Boolean));
+        document.getElementById('platformsCount').textContent = companies.size;
+        // Count remote jobs
+        document.getElementById('newTodayCount').textContent =
+          jobsList.filter(j => (j.location || '').toLowerCase().includes('remote')).length;
+      }
+
+      // ---- Active filter tags ----
+      function updateActiveFilterTags() {
+        const container = document.getElementById('activeFilters');
+        if (!container) return;
+        const tags = [];
+
+        if (currentFilters.matchScore !== 'all') {
+          tags.push({ key: 'matchScore', label: currentFilters.matchScore + '+ Score' });
+        }
+        if (currentFilters.location !== 'all') {
+          const locLabels = { remote: '🏠 Remote', onsite: '🏢 On-site', hybrid: '🔄 Hybrid' };
+          tags.push({ key: 'location', label: locLabels[currentFilters.location] || currentFilters.location });
+        }
+
+        container.innerHTML = tags.map(t =>
+          `<span class="active-filter-tag">${t.label}<button onclick="window.__finditRemoveFilter('${t.key}')">✕</button></span>`
+        ).join('');
+      }
+
+      function updateActiveFilterCount() {
+        const count = Object.entries(currentFilters).filter(([k, v]) => k !== 'search' && v !== 'all').length;
+        const badge = document.getElementById('activeFilterCount');
+        if (badge) {
+          badge.textContent = count;
+          badge.style.display = count > 0 ? 'inline-flex' : 'none';
+        }
+      }
+
+      // Global remove filter
+      window.__finditRemoveFilter = function(key) {
+        currentFilters[key] = 'all';
+        if (key === 'matchScore') document.getElementById('filterMatchSelect').value = 'all';
+        if (key === 'location') document.getElementById('filterLocationSelect').value = 'all';
+        applyFilters();
+      };
+
+      // ---- Wire up Events ----
+      // Select filters
+      document.getElementById('filterMatchSelect')?.addEventListener('change', e => {
+        currentFilters.matchScore = e.target.value;
+        applyFilters();
+      });
+      document.getElementById('filterLocationSelect')?.addEventListener('change', e => {
+        currentFilters.location = e.target.value;
+        applyFilters();
+      });
+
+      // Sort
+      document.getElementById('sortSelect')?.addEventListener('change', e => {
+        currentSort = e.target.value;
+        applyFilters();
+      });
+
+      // Search
+      let searchTimeout;
+      document.getElementById('jobSearch')?.addEventListener('input', e => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          currentFilters.search = e.target.value;
+          applyFilters();
+        }, 300);
+      });
+
+      // Clear all
+      document.getElementById('clearFilters')?.addEventListener('click', () => {
+        currentFilters = { matchScore: 'all', location: 'all', search: '' };
+        currentSort = 'match-desc';
+        document.getElementById('filterMatchSelect').value = 'all';
+        document.getElementById('filterLocationSelect').value = 'all';
+        document.getElementById('sortSelect').value = 'match-desc';
+        document.getElementById('jobSearch').value = '';
+        applyFilters();
+      });
+
+      // Filter group toggles
+      document.querySelectorAll('.filter-group-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          this.classList.toggle('active');
+          const body = document.getElementById(this.dataset.target);
+          if (body) body.classList.toggle('active');
+        });
+      });
+
+      // Mobile filter toggle
+      const mobileFilterBtn = document.getElementById('mobileFilterToggle');
+      const filtersEl = document.getElementById('filtersSidebar');
+      const filtersOverlay = document.getElementById('mobileFiltersOverlay');
+
+      function closeMobileFilters() {
+        filtersEl?.classList.remove('mobile-open');
+        filtersOverlay?.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      mobileFilterBtn?.addEventListener('click', () => {
+        const isOpen = filtersEl?.classList.toggle('mobile-open');
+        filtersOverlay?.classList.toggle('active', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      });
+
+      filtersOverlay?.addEventListener('click', closeMobileFilters);
+
+      // Initial render
+      applyFilters();
+    }
+  </script>
+</body>
+</html>

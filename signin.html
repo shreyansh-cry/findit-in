@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sign in to Findit — Access personalized internship and freelance job matches tailored to your skills.">
+  <title>Sign In — Findit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='20' width='100' height='100' fill='%234F46E5'/><text x='50' y='68' text-anchor='middle' fill='white' font-size='55' font-weight='bold' font-family='sans-serif'>F</text></svg>">
+</head>
+<body>
+
+  <div class="auth-page">
+    <!-- LEFT: Form Side -->
+    <div class="auth-left">
+      <div class="auth-card">
+        <div class="auth-header">
+          <a href="index.html" class="navbar-logo">
+            <div class="logo-icon">F</div>
+            Findit
+          </a>
+
+          <!-- Sign In View -->
+          <div id="signinView">
+            <h1>Welcome back</h1>
+            <p>Don't have an account? <a href="#" id="showSignup">Create one</a></p>
+          </div>
+
+          <!-- Sign Up View (hidden by default) -->
+          <div id="signupView" style="display: none;">
+            <h1>Create your account</h1>
+            <p>Already have an account? <a href="#" id="showSignin">Sign in</a></p>
+          </div>
+        </div>
+
+        <!-- Google Button -->
+        <button class="btn-google" id="btnGoogle">
+          <div class="btn-spinner"></div>
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          Continue with Google
+        </button>
+
+        <div class="auth-divider">
+          <span>or continue with email</span>
+        </div>
+
+        <!-- Sign In Form -->
+        <form id="signinForm" onsubmit="return handleSignIn(event)">
+          <div class="form-group">
+            <label class="form-label" for="signinEmail">Email address</label>
+            <input class="form-input" type="email" id="signinEmail" placeholder="you@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signinPassword">Password</label>
+            <div class="password-group">
+              <input class="form-input" type="password" id="signinPassword" placeholder="Enter your password" required>
+              <button type="button" class="password-toggle" onclick="togglePassword('signinPassword', this)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+            <div class="form-checkbox" style="margin-bottom: 0;">
+              <input type="checkbox" id="rememberMe">
+              <label for="rememberMe">Remember me</label>
+            </div>
+            <div class="forgot-password" style="margin-bottom: 0;">
+              <a href="#">Forgot password?</a>
+            </div>
+          </div>
+
+          <button type="submit" class="form-submit">Sign In</button>
+        </form>
+
+        <!-- Sign Up Form (hidden by default) -->
+        <form id="signupForm" style="display: none;" onsubmit="return handleSignUp(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="signupFirstName">First name</label>
+              <input class="form-input" type="text" id="signupFirstName" placeholder="John" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signupLastName">Last name</label>
+              <input class="form-input" type="text" id="signupLastName" placeholder="Doe" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signupEmail">Email address</label>
+            <input class="form-input" type="email" id="signupEmail" placeholder="you@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signupPassword">Password</label>
+            <div class="password-group">
+              <input class="form-input" type="password" id="signupPassword" placeholder="Create a strong password" required minlength="8">
+              <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <p class="form-helper">Must be at least 8 characters</p>
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="agreeTerms" required>
+            <label for="agreeTerms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+          </div>
+
+          <button type="submit" class="form-submit">Create Account</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- RIGHT: Branding Side -->
+    <div class="auth-right">
+      <div class="hero-shapes">
+        <div class="hero-shape"></div>
+        <div class="hero-shape"></div>
+        <div class="hero-shape"></div>
+      </div>
+
+      <div class="auth-right-content">
+        <h2>Your career starts here.</h2>
+        <p>Join a community of students and freelancers discovering their next big opportunity through AI-powered matching.</p>
+
+        <div class="auth-features">
+          <div class="auth-feature">
+            <div class="auth-feature-icon">🎯</div>
+            <span>AI-matched opportunities tailored to your skills</span>
+          </div>
+          <div class="auth-feature">
+            <div class="auth-feature-icon">⚡</div>
+            <span>Real-time alerts from 15+ job platforms</span>
+          </div>
+          <div class="auth-feature">
+            <div class="auth-feature-icon">🚀</div>
+            <span>100% free for students and beginners</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification container -->
+  <div class="auth-toast" id="authToast"></div>
+
+  <script src="script.js"></script>
+  <script type="module">
+    import { signInWithGoogle, isLoggedIn, onAuthChange } from './firebase-config.js';
+
+    console.log('📄 Login page loaded');
+
+    // ---- Auto-redirect if already logged in ----
+    // Check localStorage first (instant)
+    if (isLoggedIn()) {
+      console.log('👤 User already logged in (localStorage). Redirecting...');
+      window.location.href = 'preferences.html';
+    }
+
+    // Also listen to Firebase Auth state (catches persisted sessions)
+    onAuthChange((user) => {
+      if (user) {
+        console.log('👤 User already logged in (Firebase Auth). Redirecting...');
+        window.location.href = 'preferences.html';
+      }
+    });
+
+    // ---- Toast helper ----
+    function showToast(message, type = 'error') {
+      const toast = document.getElementById('authToast');
+      toast.textContent = message;
+      toast.className = 'auth-toast ' + type;
+      void toast.offsetWidth;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 4000);
+    }
+
+    // ---- Google Sign-In button ----
+    let isSigningIn = false; // Guard against double-clicks
+
+    const btnGoogle = document.getElementById('btnGoogle');
+    if (btnGoogle) {
+      btnGoogle.addEventListener('click', async () => {
+        console.log('🔘 Google sign-in button clicked');
+
+        // Prevent double-click / multiple popups
+        if (isSigningIn) {
+          console.warn('⚠️ Sign-in already in progress, ignoring click');
+          return;
+        }
+        isSigningIn = true;
+
+        btnGoogle.classList.add('loading');
+        const originalText = btnGoogle.childNodes[btnGoogle.childNodes.length - 1];
+        const prevText = originalText.textContent;
+        originalText.textContent = ' Signing in...';
+
+        try {
+          const result = await signInWithGoogle();
+
+          if (result.success) {
+            console.log('✅ Google sign-in success:', result.user.displayName, result.user.email);
+            showToast('Welcome, ' + result.user.displayName + '!', 'success');
+            setTimeout(() => {
+              window.location.href = 'preferences.html';
+            }, 600);
+          } else {
+            console.error('❌ Google sign-in failed:', result.error);
+            btnGoogle.classList.remove('loading');
+            originalText.textContent = prevText;
+            showToast(result.error);
+            isSigningIn = false;
+          }
+        } catch (err) {
+          console.error('❌ Unexpected auth error:', err);
+          btnGoogle.classList.remove('loading');
+          originalText.textContent = prevText;
+          showToast('Something went wrong. Please try again.');
+          isSigningIn = false;
+        }
+      });
+    } else {
+      console.error('❌ Google sign-in button (#btnGoogle) not found in DOM');
+    }
+
+    // ---- Email Sign In (frontend only — just redirects) ----
+    window.handleSignIn = function(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.form-submit');
+      btn.textContent = 'Signing in...';
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+      setTimeout(() => {
+        window.location.href = 'preferences.html';
+      }, 800);
+      return false;
+    };
+
+    // ---- Email Sign Up (frontend only — just redirects) ----
+    window.handleSignUp = function(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.form-submit');
+      btn.textContent = 'Creating account...';
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+      setTimeout(() => {
+        window.location.href = 'preferences.html';
+      }, 800);
+      return false;
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tell us about yourself — Set your job preferences to get AI-matched internship and freelance opportunities on Findit.">
+  <title>Complete Your Profile — Findit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='20' width='100' height='100' fill='%234F46E5'/><text x='50' y='68' text-anchor='middle' fill='white' font-size='55' font-weight='bold' font-family='sans-serif'>F</text></svg>">
+</head>
+<body class="preferences-page">
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">
+        <div class="logo-icon">F</div>
+        Findit
+      </a>
+
+      <div class="navbar-actions">
+        <span style="font-size: 14px; color: var(--text-secondary);">Step 2 of 3</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HEADER ===== -->
+  <div class="container">
+    <div class="preferences-header">
+      <div class="progress-bar">
+        <div class="progress-step">
+          <div class="progress-dot completed">✓</div>
+        </div>
+        <div class="progress-line active"></div>
+        <div class="progress-step">
+          <div class="progress-dot active">2</div>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+          <div class="progress-dot inactive">3</div>
+        </div>
+      </div>
+
+      <h1>Complete Your Profile</h1>
+      <p>Tell us about yourself so we can find the best opportunities for you.</p>
+    </div>
+  </div>
+
+  <!-- ===== FORM ===== -->
+  <div class="container">
+    <form class="preferences-form" id="preferencesForm" onsubmit="return handlePreferences(event)">
+
+      <!-- Personal Information -->
+      <div class="form-section">
+        <h3 class="form-section-title"><span class="icon">👤</span> Personal Information</h3>
+        <p class="form-section-desc">Basic details to set up your profile.</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="fullName">Full Name *</label>
+            <input class="form-input" type="text" id="fullName" placeholder="John Doe" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address *</label>
+            <input class="form-input" type="email" id="email" placeholder="you@example.com" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="college">College / University</label>
+            <input class="form-input" type="text" id="college" placeholder="e.g. IIT Delhi, Stanford">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="yearOfStudy">Current Year of Study</label>
+            <select class="form-select" id="yearOfStudy">
+              <option value="" disabled selected>Select year</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+              <option value="5">5th Year</option>
+              <option value="graduate">Graduate</option>
+              <option value="postgraduate">Post Graduate</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="location">Location</label>
+          <input class="form-input" type="text" id="location" placeholder="e.g. Mumbai, India">
+        </div>
+      </div>
+
+      <div class="form-section-divider"></div>
+
+      <!-- Job Preferences -->
+      <div class="form-section">
+        <h3 class="form-section-title"><span class="icon">🎯</span> Job Preferences</h3>
+        <p class="form-section-desc">Help us understand what kind of work excites you.</p>
+
+        <div class="form-group">
+          <label class="form-label" for="jobStream">Preferred Job Stream *</label>
+          <select class="form-select" id="jobStream" required>
+            <option value="" disabled selected>Select a stream</option>
+            <option value="video-editing">🎬 Video Editing</option>
+            <option value="social-media">📱 Social Media Management</option>
+            <option value="stock-markets">📈 Stock Markets</option>
+            <option value="tutoring">📚 Tutoring</option>
+            <option value="content-creation">✍️ Content Creation</option>
+            <option value="thumbnail-design">🎨 Thumbnail Design</option>
+            <option value="web-development">💻 Web Development</option>
+            <option value="ui-ux-design">🖼️ UI/UX Design</option>
+            <option value="graphic-design">🎯 Graphic Design</option>
+            <option value="digital-marketing">📣 Digital Marketing</option>
+            <option value="data-analytics">📊 Data Analytics</option>
+            <option value="other">✨ Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Skills *</label>
+          <div class="tags-input" id="skillsInput">
+            <input type="text" placeholder="Type a skill and press Enter (e.g. React, Figma)" id="skillTagInput">
+          </div>
+          <p class="form-helper">Press Enter or comma to add a skill. Click × to remove.</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="qualification">Qualification / Experience</label>
+          <textarea class="form-textarea" id="qualification" placeholder="Briefly describe your qualifications, certifications, or relevant experience..." rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Preferred Work Type</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="workType" id="workRemote" value="remote" checked>
+              <label for="workRemote">🏠 Remote</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="workType" id="workOnsite" value="onsite">
+              <label for="workOnsite">🏢 On-site</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="workType" id="workHybrid" value="hybrid">
+              <label for="workHybrid">🔄 Hybrid</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="workType" id="workAny" value="any">
+              <label for="workAny">✅ Any</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="stipend">Expected Pay / Stipend Range</label>
+          <select class="form-select" id="stipend">
+            <option value="" disabled selected>Select range</option>
+            <option value="unpaid">Unpaid (Learning / Experience)</option>
+            <option value="0-5k">₹0 – ₹5,000 / month</option>
+            <option value="5k-10k">₹5,000 – ₹10,000 / month</option>
+            <option value="10k-20k">₹10,000 – ₹20,000 / month</option>
+            <option value="20k-50k">₹20,000 – ₹50,000 / month</option>
+            <option value="50k+">₹50,000+ / month</option>
+            <option value="project">Per Project Basis</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section-divider"></div>
+
+      <!-- Links & Resume -->
+      <div class="form-section">
+        <h3 class="form-section-title"><span class="icon">🔗</span> Links & Resume</h3>
+        <p class="form-section-desc">Share your portfolio and upload your resume so we can match you better.</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="portfolioLink">Portfolio Link</label>
+            <input class="form-input" type="url" id="portfolioLink" placeholder="https://yourportfolio.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="linkedinLink">LinkedIn Profile</label>
+            <input class="form-input" type="url" id="linkedinLink" placeholder="https://linkedin.com/in/yourprofile">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Resume / CV</label>
+          <div class="upload-zone" id="uploadZone">
+            <div class="upload-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <h4>Drag & drop your file here, or <span>browse</span></h4>
+            <p>Upload your resume or CV to help us find better job matches.</p>
+            <div class="upload-formats">
+              <span>PDF</span>
+              <span>DOC</span>
+              <span>DOCX</span>
+            </div>
+          </div>
+          <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx" hidden>
+          <div class="upload-file-info" id="uploadFileInfo">
+            <div class="file-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <span class="file-name" id="uploadFileName">document.pdf</span>
+            <button type="button" class="file-remove" id="removeFile">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <button type="submit" class="form-submit btn-lg">
+          Submit & Find Opportunities
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div style="height: 80px;"></div>
+
+  <script src="script.js"></script>
+  <script type="module">
+    import { updateNavbarAuth, getCurrentUser, isLoggedIn, saveUserProfile, getUserProfile } from './firebase-config.js';
+
+    // Auth guard — redirect to sign-in if not logged in
+    if (!isLoggedIn()) {
+      window.location.href = 'signin.html';
+    }
+
+    updateNavbarAuth();
+
+    // Pre-fill form fields from Google user data
+    const user = getCurrentUser();
+    if (user) {
+      const nameField = document.getElementById('fullName');
+      const emailField = document.getElementById('email');
+      if (nameField && user.displayName) nameField.value = user.displayName;
+      if (emailField && user.email) {
+        emailField.value = user.email;
+        emailField.readOnly = true;
+        emailField.style.opacity = '0.7';
+        emailField.style.cursor = 'not-allowed';
+      }
+    }
+
+    // ---- Pre-fill from Firestore if user already has saved data ----
+    async function prefillFromFirestore() {
+      try {
+        const profile = await getUserProfile();
+        if (!profile) return;
+
+        const setVal = (id, val) => {
+          const el = document.getElementById(id);
+          if (el && val) el.value = val;
+        };
+
+        setVal('fullName', profile.fullName);
+        setVal('college', profile.college);
+        setVal('yearOfStudy', profile.yearOfStudy);
+        setVal('location', profile.location);
+        setVal('jobStream', profile.preferredJobStream);
+        setVal('qualification', profile.qualificationExperience);
+        setVal('stipend', profile.expectedPay);
+        setVal('portfolioLink', profile.portfolioLink);
+        setVal('linkedinLink', profile.linkedinProfile);
+
+        // Pre-fill work type radio
+        if (profile.preferredWorkType) {
+          const radio = document.querySelector(`input[name="workType"][value="${profile.preferredWorkType}"]`);
+          if (radio) radio.checked = true;
+        }
+
+        // Pre-fill skills tags
+        if (profile.skills && profile.skills.length > 0) {
+          const container = document.getElementById('skillsInput');
+          const input = document.getElementById('skillTagInput');
+          if (container && input) {
+            profile.skills.forEach(skill => {
+              const tag = document.createElement('span');
+              tag.className = 'tag';
+              tag.innerHTML = `${skill} <button type="button" class="remove-tag" data-skill="${skill.toLowerCase()}">✕</button>`;
+              container.insertBefore(tag, input);
+              tag.querySelector('.remove-tag').addEventListener('click', function() {
+                tag.remove();
+              });
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('Could not pre-fill from Firestore:', err);
+      }
+    }
+
+    prefillFromFirestore();
+
+    // Collect all skills from the tag input
+    function getSkillTags() {
+      const tags = document.querySelectorAll('#skillsInput .tag');
+      return Array.from(tags).map(tag => {
+        // Get only the text content, excluding the remove button
+        return tag.childNodes[0].textContent.trim();
+      });
+    }
+
+    // Get the uploaded file name (if any)
+    function getUploadedFileName() {
+      const fileInfo = document.getElementById('uploadFileInfo');
+      if (fileInfo && fileInfo.classList.contains('active')) {
+        return document.getElementById('uploadFileName').textContent;
+      }
+      return null;
+    }
+
+    // Show toast notification
+    function showToast(message, type = 'error') {
+      // Remove existing toast
+      const existing = document.querySelector('.auth-toast');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.className = `auth-toast ${type}`;
+      toast.innerHTML = `
+        <span>${type === 'error' ? '⚠️' : '✅'}</span>
+        <span>${message}</span>
+      `;
+      document.body.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.add('visible');
+      });
+
+      setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => toast.remove(), 400);
+      }, 4000);
+    }
+
+    // Override the form handler — save to Firestore + localStorage
+    window.handlePreferences = async function(e) {
+      e.preventDefault();
+
+      // Gather all form data
+      const formData = {
+        fullName: document.getElementById('fullName')?.value || '',
+        email: document.getElementById('email')?.value || '',
+        college: document.getElementById('college')?.value || '',
+        yearOfStudy: document.getElementById('yearOfStudy')?.value || '',
+        location: document.getElementById('location')?.value || '',
+        jobStream: document.getElementById('jobStream')?.value || '',
+        skills: getSkillTags(),
+        qualification: document.getElementById('qualification')?.value || '',
+        workType: document.querySelector('input[name="workType"]:checked')?.value || '',
+        stipend: document.getElementById('stipend')?.value || '',
+        portfolioLink: document.getElementById('portfolioLink')?.value || '',
+        linkedinLink: document.getElementById('linkedinLink')?.value || '',
+        resumeFileName: getUploadedFileName(),
+        submittedAt: new Date().toISOString()
+      };
+
+      // Save to localStorage (for offline/local reference)
+      localStorage.setItem('findit_preferences', JSON.stringify(formData));
+
+      // Show loading state
+      const btn = e.target.querySelector('.form-submit');
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        Saving to Firestore...
+      `;
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+
+      // Save to Firestore
+      const result = await saveUserProfile(formData);
+
+      if (result.success) {
+        showToast('Profile saved to Firestore successfully!', 'success');
+        console.log('✅ Preferences saved to Firestore and localStorage');
+
+
+        btn.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Saved! Redirecting...
+        `;
+        btn.style.opacity = '1';
+
+        setTimeout(() => {
+          window.location.href = 'results.html';
+        }, 1500);
+      } else {
+        // Show error, restore button
+        showToast(result.error || 'Failed to save. Please try again.', 'error');
+        btn.innerHTML = originalHTML;
+        btn.style.opacity = '1';
+        btn.disabled = false;
+      }
+
+      return false;
+    };
+  </script>
+</body>
+</html>
