@@ -20,7 +20,6 @@ module.exports = async (req, res) => {
     uid,
   } = req.body;
 
-  // Accept both field name variants
   const stream = preferredJobStream || jobStream;
   const skillsData = skills;
   const workTypeData = preferredWorkType || workType || "remote";
@@ -37,7 +36,7 @@ module.exports = async (req, res) => {
 
   const prompt = `You are a job scout for Findit.in, a platform that helps Indian students and freelancers find jobs.
 
-Search the web and find 10 real, active freelance or internship job postings that match this user profile:
+Find 10 real, active freelance or internship job postings that match this user profile:
 
 Name: ${fullName || "User"}
 Skills: ${skillsList}
@@ -47,7 +46,7 @@ Work Type: ${workTypeData}
 Expected Pay: ${payData}
 Experience/Qualification: ${qualData}
 
-Search platforms like LinkedIn, Internshala, Naukri, Twitter/X, Reddit, Discord job boards, Google, Upwork, and any other relevant job sites.
+Based on your knowledge of job platforms like LinkedIn, Internshala, Naukri, Upwork, Reddit, and freelance boards, generate 10 realistic job listings that would match this profile.
 
 Return ONLY a valid JSON array with exactly 10 job objects. No explanation, no markdown, no extra text — just the raw JSON array.
 
@@ -74,13 +73,6 @@ Only return the JSON array, nothing else.`;
     const response = await client.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 4000,
-      tools: [
-        {
-          type: "web_search_20250305",
-          name: "web_search",
-          max_uses: 8,
-        },
-      ],
       messages: [{ role: "user", content: prompt }],
     });
 
