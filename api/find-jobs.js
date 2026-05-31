@@ -9,32 +9,43 @@ module.exports = async (req, res) => {
     fullName,
     skills,
     preferredJobStream,
+    jobStream,
     location,
     preferredWorkType,
+    workType,
     expectedPay,
+    stipend,
     qualificationExperience,
+    qualification,
     uid,
   } = req.body;
 
-  if (!skills || !preferredJobStream) {
-    return res.status(400).json({ error: "Missing required profile fields" });
+  // Accept both field name variants
+  const stream = preferredJobStream || jobStream;
+  const skillsData = skills;
+  const workTypeData = preferredWorkType || workType || "remote";
+  const payData = expectedPay || stipend || "any";
+  const qualData = qualificationExperience || qualification || "fresher";
+
+  if (!skillsData || skillsData.length === 0 || !stream) {
+    return res.status(400).json({ error: "Missing required fields: skills and job stream" });
   }
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-  const skillsList = Array.isArray(skills) ? skills.join(", ") : skills;
+  const skillsList = Array.isArray(skillsData) ? skillsData.join(", ") : skillsData;
 
   const prompt = `You are a job scout for Findit.in, a platform that helps Indian students and freelancers find jobs.
 
 Search the web and find 10 real, active freelance or internship job postings that match this user profile:
 
-Name: ${fullName}
+Name: ${fullName || "User"}
 Skills: ${skillsList}
-Job Stream: ${preferredJobStream}
+Job Stream: ${stream}
 Location: ${location || "India (remote preferred)"}
-Work Type: ${preferredWorkType || "remote"}
-Expected Pay: ${expectedPay || "any"}
-Experience/Qualification: ${qualificationExperience || "fresher"}
+Work Type: ${workTypeData}
+Expected Pay: ${payData}
+Experience/Qualification: ${qualData}
 
 Search platforms like LinkedIn, Internshala, Naukri, Twitter/X, Reddit, Discord job boards, Google, Upwork, and any other relevant job sites.
 
@@ -56,7 +67,7 @@ Each job object must follow this exact schema:
 }
 
 Make uid values like job_001, job_002 etc.
-Make matchScore higher for jobs that closely match the skills: ${skillsList} and stream: ${preferredJobStream}.
+Make matchScore higher for jobs that closely match the skills: ${skillsList} and stream: ${stream}.
 Only return the JSON array, nothing else.`;
 
   try {
