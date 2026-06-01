@@ -1,4 +1,4 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const Groq = require("groq-sdk");
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
@@ -39,11 +39,23 @@ Each object must have these exact fields:
 Only return the JSON array, nothing else.`;
 
   try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    let rawText = response.text().trim();
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      max_tokens: 4000,
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful job matching assistant. Always respond with valid JSON only, no markdown, no extra text."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
+    });
+
+    let rawText = response.choices[0].message.content.trim();
     rawText = rawText.replace(/```json|```/g, "").trim();
     const jobs = JSON.parse(rawText);
     return res.status(200).json({ success: true, jobs, uid });
