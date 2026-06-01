@@ -68,6 +68,7 @@ module.exports = async (req, res) => {
 
     if (realJobs.length > 0) {
       console.log(`✅ Using ${realJobs.length} real jobs from SerpAPI`);
+      console.log('First job data:', JSON.stringify(realJobs[0], null, 2));
       
       const jobsContext = realJobs.slice(0, 15).map((job, i) => {
         const applyLink = "https://www.google.com/search?q=" + encodeURIComponent(job.title + " " + job.company_name + " job apply");
