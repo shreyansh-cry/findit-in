@@ -16,20 +16,8 @@ async function searchRealJobs(query, location) {
 }
 
 function buildApplyLink(job) {
-  // Try direct apply link first
-  if (job.apply_options && job.apply_options.length > 0) {
-    return job.apply_options[0].link;
-  }
-  // Try share link
-  if (job.share_link) {
-    return job.share_link;
-  }
-  // Try related links
-  if (job.related_links && job.related_links.length > 0) {
-    return job.related_links[0].link;
-  }
-  // Fallback to Google search for the job
-  return "https://www.google.com/search?q=" + encodeURIComponent(job.title + " " + job.company_name + " apply now");
+  // Always use Google Jobs search — most reliable, never 404s
+  return "https://www.google.com/search?q=" + encodeURIComponent(job.title + " " + job.company_name + " job apply");
 }
 
 module.exports = async (req, res) => {
