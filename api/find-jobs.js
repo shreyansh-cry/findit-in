@@ -15,6 +15,23 @@ async function searchRealJobs(query, location) {
   return data.jobs_results || [];
 }
 
+function buildApplyLink(job) {
+  // Try direct apply link first
+  if (job.apply_options && job.apply_options.length > 0) {
+    return job.apply_options[0].link;
+  }
+  // Try share link
+  if (job.share_link) {
+    return job.share_link;
+  }
+  // Try related links
+  if (job.related_links && job.related_links.length > 0) {
+    return job.related_links[0].link;
+  }
+  // Fallback to Google search for the job
+  return "https://www.google.com/search?q=" + encodeURIComponent(job.title + " " + job.company_name + " apply now");
+}
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -54,7 +71,7 @@ Title: ${job.title}
 Company: ${job.company_name}
 Location: ${job.location}
 Description: ${job.description?.slice(0, 300)}
-Link: ${job.related_links?.[0]?.link || job.share_link || "https://www.google.com/search?q=" + encodeURIComponent(job.title + " " + job.company_name)}
+Link: ${buildApplyLink(job)}
 `).join("\n");
 
     const prompt = `You are a job matching assistant for Findit.in.
@@ -72,8 +89,9 @@ Expected Pay: ${payData}
 Experience: ${qualData}
 
 Format the TOP 10 most relevant jobs as a JSON array. Each object must have these exact fields:
-{"uid":"job_001","jobTitle":"exact title from listing","source":"company name","snippet":"2-3 sentence description","link":"actual job URL","platformSource":"LinkedIn or Internshala or Naukri or Google or Other","salaryOrStipend":"salary if mentioned or Not mentioned","experienceRequired":"experience needed or Fresher","postedBy":"company name","matchScore": number between 60-99 based on skill match,"createdAt":"2026-06-01"}
+{"uid":"job_001","jobTitle":"exact title from listing","source":"company name","snippet":"2-3 sentence description","link":"use the exact Link provided above for each job","platformSource":"LinkedIn or Internshala or Naukri or Google or Other","salaryOrStipend":"salary if mentioned or Not mentioned","experienceRequired":"experience needed or Fresher","postedBy":"company name","matchScore": number between 60-99 based on skill match,"createdAt":"2026-06-01"}
 
+IMPORTANT: Use the exact Link provided for each job — do not change or make up URLs.
 Return ONLY the JSON array, no markdown, no explanation.`;
 
     const response = await groq.chat.completions.create({
