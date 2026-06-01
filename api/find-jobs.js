@@ -1,4 +1,4 @@
-const Anthropic = require("@anthropic-ai/sdk");
+const OpenAI = require("openai");
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
@@ -30,13 +30,13 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: "Missing required fields: skills and job stream" });
   }
 
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
   const skillsList = Array.isArray(skillsData) ? skillsData.join(", ") : skillsData;
 
   const prompt = `You are a job scout for Findit.in, a platform that helps Indian students and freelancers find jobs.
 
-Find 10 real, active freelance or internship job postings that match this user profile:
+Find 10 realistic freelance or internship job postings that match this user profile:
 
 Name: ${fullName || "User"}
 Skills: ${skillsList}
@@ -56,13 +56,13 @@ Each job object must follow this exact schema:
   "jobTitle": "actual job title",
   "source": "platform or company name",
   "snippet": "2-3 sentence description of the job",
-  "link": "actual URL to the job post",
+  "link": "https://internshala.com or https://linkedin.com or any real platform URL",
   "platformSource": "LinkedIn or Discord or Reddit or Twitter/X or Internshala or Naukri or Google or Upwork or Other",
   "salaryOrStipend": "salary range or Not mentioned",
   "experienceRequired": "experience needed or Fresher",
   "postedBy": "person or company name or Not clear",
   "matchScore": a number between 60 and 99 based on how well this job matches the user skills and stream,
-  "createdAt": "today's date in YYYY-MM-DD format"
+  "createdAt": "2026-06-01"
 }
 
 Make uid values like job_001, job_002 etc.
@@ -70,18 +70,22 @@ Make matchScore higher for jobs that closely match the skills: ${skillsList} and
 Only return the JSON array, nothing else.`;
 
   try {
-    const response = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
+    const response = await client.chat.completions.create({
+      model: "gpt-4o-mini",
       max_tokens: 4000,
-      messages: [{ role: "user", content: prompt }],
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful job matching assistant. Always respond with valid JSON only, no markdown, no extra text."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
     });
 
-    const textBlock = response.content.find((block) => block.type === "text");
-    if (!textBlock) {
-      return res.status(500).json({ error: "No response from AI" });
-    }
-
-    let rawText = textBlock.text.trim();
+    let rawText = response.choices[0].message.content.trim();
     rawText = rawText.replace(/```json|```/g, "").trim();
 
     const jobs = JSON.parse(rawText);
