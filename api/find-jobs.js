@@ -1,4 +1,4 @@
-const OpenAI = require("openai");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
